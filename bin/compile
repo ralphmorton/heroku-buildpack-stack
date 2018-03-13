@@ -120,7 +120,7 @@ mv "$WORK_DIR/vendor/ghc-libs" "$BUILD_DIR/vendor"
 mv "$WORK_DIR/.local/bin" "$BUILD_DIR/.local"
 
 speak "Making procfile available"
-cp "$SVC/Procfile" ./Procfile
+cp "$SVC/Procfile" "$BUILD_DIR/Procfile"
 
 speak "Caching .stack-work"
 rsync -avq "$WORK_DIR/.stack-work/" "$SANDBOX_DIR"
