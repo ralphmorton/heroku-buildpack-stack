@@ -25,6 +25,11 @@ if [ -d "$ENV_DIR" ]; then
   done
 fi
 
+if [ -z "$SVC" ]; then
+  speak "[ERROR] -  SVC environment variable must be defined"
+  exit 2
+fi
+
 WORK_DIR=/app
 cp -Rp "$BUILD_DIR/." "$WORK_DIR"
 mkdir -p "$WORK_DIR/vendor/bin"
@@ -100,7 +105,7 @@ if [ -f "$BUILD_DIR/Makefile" ]; then
     make install
 else
     stack setup
-    stack build --copy-bins
+    stack build $SVC --copy-bins
 fi
 
 # Set context environment variables.
@@ -113,6 +118,9 @@ mkdir -p "$BUILD_DIR/vendor"
 mkdir -p "$BUILD_DIR/.local"
 mv "$WORK_DIR/vendor/ghc-libs" "$BUILD_DIR/vendor"
 mv "$WORK_DIR/.local/bin" "$BUILD_DIR/.local"
+
+speak "Making procfile available"
+cp "$SVC/Procfile" ./Procfile
 
 speak "Caching .stack-work"
 rsync -avq "$WORK_DIR/.stack-work/" "$SANDBOX_DIR"
